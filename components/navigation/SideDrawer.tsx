@@ -61,12 +61,13 @@ export function SideDrawer({ state, navigation }: DrawerContentComponentProps) {
         <Ionicons
           name={isActive ? item.iconActive : item.icon}
           size={24}
-          color={isActive ? theme.accent : "#000000"}
+          color={isActive ? theme.accent : theme.mutedText}
         />
         <Text
           style={[
             styles.drawerItemText,
-            isActive && { fontFamily: fonts.semibold, color: theme.accent },
+            { fontFamily: fonts.semibold },
+            isActive ? { color: theme.accent } : { color: theme.mutedText },
           ]}
         >
           {item.label}
@@ -86,7 +87,13 @@ export function SideDrawer({ state, navigation }: DrawerContentComponentProps) {
     >
       <Image
         source={require("@/assets/icon/arc-icon.png")}
-        style={{ width: 50, height: 50, borderRadius: 8 }}
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 8,
+          borderColor: theme.border,
+          borderWidth: 1,
+        }}
       />
 
       <View style={{ marginTop: 32 }}>
