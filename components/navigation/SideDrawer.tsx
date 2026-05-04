@@ -39,7 +39,7 @@ export function SideDrawer({ state, navigation }: DrawerContentComponentProps) {
   const activeRouteName = state.routes[state.index].name;
 
   const renderDrawerItem = (item: DrawerItem) => {
-    const isActive = activeRouteName === item.url;
+    const isActive = activeRouteName.startsWith(item.url);
 
     return (
       <Pressable

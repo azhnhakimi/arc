@@ -1,10 +1,5 @@
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import ArcCalendar from "@/components/calendar/ArcCalendar";
 
 export default function Calendar() {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Text>Calendar</Text>
-    </SafeAreaView>
-  );
+  return <ArcCalendar />;
 }
