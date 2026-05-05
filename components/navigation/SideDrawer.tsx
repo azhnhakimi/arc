@@ -17,7 +17,7 @@ type DrawerItem = {
 
 const DRAWER_ITEMS: DrawerItem[] = [
   {
-    url: "Calendar",
+    url: "calendar/index",
     label: "Calendar",
     icon: "calendar-outline",
     iconActive: "calendar",
@@ -26,7 +26,7 @@ const DRAWER_ITEMS: DrawerItem[] = [
 
 const CONTROL_DRAWER_ITEMS: DrawerItem[] = [
   {
-    url: "Theme",
+    url: "theme",
     label: "Themes",
     icon: "color-palette-outline",
     iconActive: "color-palette",
@@ -39,7 +39,7 @@ export function SideDrawer({ state, navigation }: DrawerContentComponentProps) {
   const activeRouteName = state.routes[state.index].name;
 
   const renderDrawerItem = (item: DrawerItem) => {
-    const isActive = activeRouteName.startsWith(item.url);
+    const isActive = activeRouteName.startsWith(item.url.split("/")[0]);
 
     return (
       <Pressable

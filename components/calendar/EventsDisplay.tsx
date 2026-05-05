@@ -16,7 +16,7 @@ type EventsDisplayProps = {
 type Event = {
   title: string;
   description?: string;
-  timestamp: string;
+  starts_at: string;
   location?: string;
 };
 
@@ -24,7 +24,7 @@ export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
   const { theme } = useTheme();
 
   const EventCard = ({ event }: { event: Event }) => {
-    const { time, period } = extractTimeInfo(event.timestamp);
+    const { time, period } = extractTimeInfo(event.starts_at);
 
     return (
       <View

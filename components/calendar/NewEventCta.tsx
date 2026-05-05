@@ -1,15 +1,18 @@
 import { useTheme } from "@/theme/useTheme";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useRouter } from "expo-router";
 import { Pressable, View } from "react-native";
 
 export default function NewEventCta() {
   const { theme } = useTheme();
+  const router = useRouter();
 
   return (
     <View
       style={{ flexDirection: "row", justifyContent: "flex-end", padding: 12 }}
     >
       <Pressable
+        onPress={() => router.push("/calendar/create")}
         style={{
           backgroundColor: theme.accent,
           width: 56,
