@@ -208,14 +208,22 @@ export function TimePicker({ value, onChange }: TimePickerProps) {
                 selected={selectedHour}
                 onSelect={setSelectedHour}
               />
-              <Text
-                style={[
-                  styles.separator,
-                  { color: theme.primaryText, fontFamily: fonts.bold },
-                ]}
+              <View
+                style={{
+                  height: COLUMN_HEIGHT,
+                  justifyContent: "center",
+                }}
               >
-                :
-              </Text>
+                <Text
+                  style={{
+                    color: theme.primaryText,
+                    fontFamily: fonts.bold,
+                    fontSize: 24,
+                  }}
+                >
+                  :
+                </Text>
+              </View>
               <ScrollColumn
                 data={MINUTES}
                 selected={selectedMinute}
@@ -290,12 +298,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     overflow: "hidden",
-    padding: 12,
-    height: ITEM_HEIGHT * VISIBLE_ITEMS,
+    paddingHorizontal: 12,
+    height: COLUMN_HEIGHT,
   },
   columnContainer: {
     flex: 1,
-    height: "100%",
+    height: COLUMN_HEIGHT,
     justifyContent: "center",
   },
   selectionHighlight: {
@@ -318,7 +326,7 @@ const styles = StyleSheet.create({
   separator: {
     fontSize: 24,
     paddingHorizontal: 4,
-    marginBottom: 4,
+    alignSelf: "center",
   },
   actionBtn: {
     flex: 1,
