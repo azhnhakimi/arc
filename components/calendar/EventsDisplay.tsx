@@ -1,9 +1,152 @@
+import { fonts } from "@/constants/fonts";
+import { useTheme } from "@/theme/useTheme";
+import { extractTimeInfo } from "@/utils/event";
+import Entypo from "@expo/vector-icons/Entypo";
 import { Text, View } from "react-native";
 
-export default function EventsDisplay() {
+import NewEventCta from "./NewEventCta";
+import NoEventsDisplay from "./NoEventsDisplay";
+
+import { mockEvents } from "@/utils/event";
+
+type EventsDisplayProps = {
+  selectedDate: Date;
+};
+
+type Event = {
+  title: string;
+  description?: string;
+  timestamp: string;
+  location?: string;
+};
+
+export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
+  const { theme } = useTheme();
+
+  const EventCard = ({ event }: { event: Event }) => {
+    const { time, period } = extractTimeInfo(event.timestamp);
+
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 12,
+          backgroundColor: theme.surface,
+          borderRadius: 8,
+        }}
+      >
+        <View style={{ alignItems: "flex-start", flex: 1 }}>
+          <Text
+            style={{
+              fontFamily: fonts.semibold,
+              color: theme.primaryText,
+              fontSize: 20,
+            }}
+          >
+            {time}
+          </Text>
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              color: theme.mutedText,
+              fontSize: 14,
+            }}
+          >
+            {period}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            width: 2,
+            backgroundColor: theme.border,
+            marginHorizontal: 12,
+          }}
+        />
+
+        <View style={{ gap: 6, flex: 4 }}>
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              color: theme.primaryText,
+              fontSize: 16,
+            }}
+          >
+            {event.title}
+          </Text>
+          <Text
+            style={{
+              fontFamily: fonts.light,
+              color: theme.mutedText,
+              fontSize: 16,
+            }}
+          >
+            {event?.description}
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            {event.location && (
+              <Entypo name="location-pin" size={22} color={theme.accent} />
+            )}
+            <Text
+              style={{
+                fontFamily: fonts.semibold,
+                color: theme.accent,
+                fontSize: 14,
+              }}
+            >
+              {event?.location}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View>
-      <Text>EventsDisplay</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+        }}
+      >
+        <Text
+          style={{
+            color: theme.primaryText,
+            fontFamily: fonts.semibold,
+            fontSize: 20,
+          }}
+        >
+          Upcoming Events
+        </Text>
+        <Text
+          style={{
+            color: theme.mutedText,
+            fontFamily: fonts.light,
+            fontSize: 16,
+          }}
+        >
+          {selectedDate.toLocaleDateString("en-US", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+          })}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          gap: 12,
+          marginVertical: 24,
+        }}
+      >
+        {mockEvents.map((calendarEvent, index) => (
+          <EventCard key={index} event={calendarEvent} />
+        ))}
+        <NoEventsDisplay />
+        <NewEventCta />
+      </View>
     </View>
   );
 }

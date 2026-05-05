@@ -1,4 +1,6 @@
 import { ThemeProvider } from "@/theme/ThemeProvider";
+import { useTheme } from "@/theme/useTheme";
+import { getStatusBarStyle } from "@/utils/statusbar";
 import {
   SpaceGrotesk_300Light,
   SpaceGrotesk_400Regular,
@@ -32,9 +34,20 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Slot />
-        <StatusBar style="dark" />
+        <AppContent />
       </GestureHandlerRootView>
     </ThemeProvider>
+  );
+}
+
+function AppContent() {
+  const { theme } = useTheme();
+  const statusBarStyle = getStatusBarStyle(theme.background);
+
+  return (
+    <>
+      <Slot />
+      <StatusBar style={statusBarStyle} />
+    </>
   );
 }

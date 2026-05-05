@@ -1,17 +1,7 @@
 import { fonts } from "@/constants/fonts";
 import { useTheme } from "@/theme/useTheme";
 import Entypo from "@expo/vector-icons/Entypo";
-import {
-  Dimensions,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const CELL_SIZE = SCREEN_WIDTH / 7;
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 const DAYS_OF_WEEK = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -23,6 +13,8 @@ type CalendarDisplayProps = {
   goToPrevMonth: () => void;
   goToNextMonth: () => void;
   monthArray: (Date | null)[];
+  selectedDate: Date;
+  onDatePressed: (date: Date) => void;
 };
 
 export default function CalendarDisplay({
@@ -33,17 +25,35 @@ export default function CalendarDisplay({
   goToPrevMonth,
   goToNextMonth,
   monthArray,
+  selectedDate,
+  onDatePressed,
 }: CalendarDisplayProps) {
   const { theme } = useTheme();
 
-  const DayCell = ({ day, today }: { day: Date | null; today: Date }) => {
+  const DayCell = ({
+    day,
+    today,
+    selectedDate,
+  }: {
+    day: Date | null;
+    today: Date;
+    selectedDate: Date;
+  }) => {
     const isToday = day?.toDateString() === today.toDateString();
+    const isSelected = day?.toDateString() === selectedDate.toDateString();
 
     return (
-      <View
+      <Pressable
+        onPress={() => day && onDatePressed(day)}
         style={[
           styles.cell,
           isToday && { backgroundColor: theme.accent, borderRadius: 12 },
+          isSelected &&
+            !isToday && {
+              backgroundColor: theme.background,
+              borderRadius: 12,
+              borderColor: theme.accent,
+            },
         ]}
       >
         {day && (
@@ -53,7 +63,7 @@ export default function CalendarDisplay({
             {day.getDate()}
           </Text>
         )}
-      </View>
+      </Pressable>
     );
   };
 
@@ -145,7 +155,9 @@ export default function CalendarDisplay({
           keyExtractor={(_, index) => index.toString()}
           numColumns={7}
           scrollEnabled={false}
-          renderItem={({ item }) => <DayCell day={item} today={today} />}
+          renderItem={({ item }) => (
+            <DayCell day={item} today={today} selectedDate={selectedDate} />
+          )}
         />
       </View>
     </View>
@@ -158,11 +170,15 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "transparent",
+    margin: 2,
   },
   calendarContainer: {
     borderWidth: 1,
     borderRadius: 8,
     overflow: "hidden",
+    padding: 12,
   },
   monthNavigator: {
     aspectRatio: 1,

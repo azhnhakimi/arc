@@ -9,11 +9,13 @@ export default function ArcCalendar() {
   const { theme } = useTheme();
 
   const today = new Date();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const monthName = currentDate.toLocaleString("en-US", {
+  const [viewDate, setViewDate] = useState(new Date()); // controls which month is shown
+  const [selectedDate, setSelectedDate] = useState(new Date()); // controls EventsDisplay
+
+  const monthName = viewDate.toLocaleString("en-US", {
     month: "long",
   });
-  const year = currentDate.getFullYear();
+  const year = viewDate.getFullYear();
 
   function generateMonth(year: number, month: number) {
     const firstDay = new Date(year, month, 1).getDay();
@@ -36,13 +38,10 @@ export default function ArcCalendar() {
     return days;
   }
 
-  const monthArray = generateMonth(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-  );
+  const monthArray = generateMonth(viewDate.getFullYear(), viewDate.getMonth());
 
   const goToPrevMonth = () => {
-    setCurrentDate((prev) => {
+    setViewDate((prev) => {
       const date = new Date(prev);
       date.setMonth(date.getMonth() - 1);
       return date;
@@ -50,7 +49,7 @@ export default function ArcCalendar() {
   };
 
   const goToNextMonth = () => {
-    setCurrentDate((prev) => {
+    setViewDate((prev) => {
       const date = new Date(prev);
       date.setMonth(date.getMonth() + 1);
       return date;
@@ -58,7 +57,8 @@ export default function ArcCalendar() {
   };
 
   const goToToday = () => {
-    setCurrentDate(new Date());
+    setViewDate(new Date());
+    setSelectedDate(new Date());
   };
 
   return (
@@ -68,6 +68,7 @@ export default function ArcCalendar() {
       <FlatList
         data={[]}
         renderItem={null}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
           <CalendarDisplay
             today={today}
@@ -77,9 +78,13 @@ export default function ArcCalendar() {
             goToPrevMonth={goToPrevMonth}
             goToNextMonth={goToNextMonth}
             monthArray={monthArray}
+            selectedDate={selectedDate}
+            onDatePressed={setSelectedDate}
           />
         )}
-        ListFooterComponent={() => <EventsDisplay />}
+        ListFooterComponent={() => (
+          <EventsDisplay selectedDate={selectedDate} />
+        )}
         contentContainerStyle={{
           gap: 18,
         }}
