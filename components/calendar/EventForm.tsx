@@ -16,6 +16,7 @@ import { DatePicker } from "./DatePicker";
 import { TimePicker } from "./TimePicker";
 
 import { useCreateEvent } from "@/hooks/useCreateEvent";
+import { useUpdateEvent } from "@/hooks/useUpdateEvent";
 import { type Event } from "@/utils/events/types";
 
 const defaultForm = {
@@ -30,7 +31,12 @@ export default function EventForm({ event }: { event?: Event }) {
   const { theme } = useTheme();
   const styles = useStyles();
 
-  const { submit, loading, error } = useCreateEvent();
+  const { submit, loading: creating, error: createError } = useCreateEvent();
+  const { update, loading: updating, error: updateError } = useUpdateEvent();
+  const isEditing = !!event?.id;
+  const loading = creating || updating;
+  const error = createError || updateError;
+
   const [errors, setErrors] = useState({ title: "" });
 
   const [form, setForm] = useState(defaultForm);
@@ -71,7 +77,9 @@ export default function EventForm({ event }: { event?: Event }) {
       starts_at: starts_at.toISOString(),
     };
 
-    const data = await submit(payload);
+    const data = isEditing
+      ? await update(event.id, payload)
+      : await submit(payload);
 
     if (data) {
       setErrors({ title: "" });
@@ -166,7 +174,13 @@ export default function EventForm({ event }: { event?: Event }) {
                 fontSize: 18,
               }}
             >
-              {loading ? "Creating..." : "Create"}
+              {loading
+                ? event
+                  ? "Updating..."
+                  : "Creating..."
+                : event
+                  ? "Update"
+                  : "Create"}
             </Text>
           </Pressable>
         </View>

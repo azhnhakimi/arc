@@ -12,6 +12,7 @@ export default function ArcCalendar() {
   const [viewDate, setViewDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const monthIndex = viewDate.getMonth();
   const monthName = viewDate.toLocaleString("en-US", {
     month: "long",
   });
@@ -73,6 +74,7 @@ export default function ArcCalendar() {
           <CalendarDisplay
             today={today}
             monthName={monthName}
+            monthIndex={monthIndex}
             year={year}
             goToToday={goToToday}
             goToPrevMonth={goToPrevMonth}

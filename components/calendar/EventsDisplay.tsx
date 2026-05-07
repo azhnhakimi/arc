@@ -2,9 +2,11 @@ import { fonts } from "@/constants/fonts";
 import { useTheme } from "@/theme/useTheme";
 import { extractTimeInfo } from "@/utils/helpers";
 import Entypo from "@expo/vector-icons/Entypo";
-import { ActivityIndicator, Text, View } from "react-native";
+import { router } from "expo-router";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 import { useEvents } from "@/hooks/useEvents";
+import { type Event } from "@/utils/events/types";
 import NewEventCta from "./NewEventCta";
 import NoEventsDisplay from "./NoEventsDisplay";
 
@@ -12,22 +14,18 @@ type EventsDisplayProps = {
   selectedDate: Date;
 };
 
-type Event = {
-  title: string;
-  description?: string;
-  starts_at: string;
-  location?: string;
-};
-
 export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
   const { theme } = useTheme();
   const { events, loading, error } = useEvents(selectedDate);
 
   const EventCard = ({ event }: { event: Event }) => {
-    const { time, period } = extractTimeInfo(event.starts_at);
+    const { time, period } = extractTimeInfo(event.starts_at) || {};
 
     return (
-      <View
+      <Pressable
+        onPress={() =>
+          router.push({ pathname: "/calendar/[id]", params: { id: event.id } })
+        }
         style={{
           flexDirection: "row",
           padding: 12,
@@ -98,7 +96,7 @@ export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
             </Text>
           </View>
         </View>
-      </View>
+      </Pressable>
     );
   };
 
@@ -142,8 +140,19 @@ export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
         }}
       >
         {loading ? (
-          <View>
-            <ActivityIndicator size="large" color={theme.accent} />
+          <View
+            style={{
+              flex: 1,
+              borderStyle: "dashed",
+              borderWidth: 2,
+              borderColor: theme.mutedText,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingVertical: 32,
+            }}
+          >
+            <ActivityIndicator size={20} color={theme.accent} />
           </View>
         ) : events.length > 0 ? (
           events.map((calendarEvent, index) => (

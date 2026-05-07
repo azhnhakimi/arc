@@ -1,5 +1,7 @@
 import { fonts } from "@/constants/fonts";
+import { useMonthEvents } from "@/hooks/useEvents";
 import { useTheme } from "@/theme/useTheme";
+import { formatLocalDate } from "@/utils/helpers";
 import Entypo from "@expo/vector-icons/Entypo";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -8,6 +10,7 @@ const DAYS_OF_WEEK = ["S", "M", "T", "W", "T", "F", "S"];
 type CalendarDisplayProps = {
   today: Date;
   monthName: string;
+  monthIndex: number;
   year: number;
   goToToday: () => void;
   goToPrevMonth: () => void;
@@ -20,6 +23,7 @@ type CalendarDisplayProps = {
 export default function CalendarDisplay({
   today,
   monthName,
+  monthIndex,
   year,
   goToToday,
   goToPrevMonth,
@@ -29,6 +33,9 @@ export default function CalendarDisplay({
   onDatePressed,
 }: CalendarDisplayProps) {
   const { theme } = useTheme();
+
+  const { eventDates } = useMonthEvents(year, monthIndex);
+  const hasEvent = (day: Date) => eventDates.includes(formatLocalDate(day));
 
   const DayCell = ({
     day,
@@ -62,6 +69,20 @@ export default function CalendarDisplay({
           >
             {day.getDate()}
           </Text>
+        )}
+        {day && hasEvent(day) && (
+          <View
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: 9999,
+              backgroundColor: isToday ? theme.onAccent : theme.accent,
+              position: "absolute",
+              bottom: 4,
+              borderWidth: 1,
+              borderColor: isToday ? theme.onAccent : theme.accent,
+            }}
+          />
         )}
       </Pressable>
     );
