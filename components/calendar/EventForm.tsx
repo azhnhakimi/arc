@@ -1,6 +1,7 @@
 import { fonts } from "@/constants/fonts";
 import { useTheme } from "@/theme/useTheme";
-import { useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   Keyboard,
   Pressable,
@@ -10,27 +11,56 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+
 import { DatePicker } from "./DatePicker";
 import { TimePicker } from "./TimePicker";
 
-import { Event } from "@/utils/event";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
+import { type Event } from "@/utils/events/types";
+
+const defaultForm = {
+  title: "",
+  description: "",
+  date: new Date(),
+  time: new Date(),
+  location: "",
+};
 
 export default function EventForm({ event }: { event?: Event }) {
   const { theme } = useTheme();
   const styles = useStyles();
 
-  const [form, setForm] = useState({
-    title: event?.title || "",
-    description: event?.description || "",
-    date: new Date(event?.starts_at || new Date()),
-    time: new Date(event?.starts_at || new Date()),
-    location: event?.location || "",
-  });
+  const { submit, loading, error } = useCreateEvent();
+  const [errors, setErrors] = useState({ title: "" });
+
+  const [form, setForm] = useState(defaultForm);
+
+  useFocusEffect(
+    useCallback(() => {
+      setForm(
+        event
+          ? {
+              title: event.title,
+              description: event.description ?? "",
+              date: new Date(event.starts_at),
+              time: new Date(event.starts_at),
+              location: event.location ?? "",
+            }
+          : defaultForm,
+      );
+      setErrors({ title: "" });
+    }, [event]),
+  );
 
   const updateField = (field: keyof typeof form, value: any) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!form.title.trim()) {
+      setErrors({ title: "Title is required" });
+      return;
+    }
+
     const starts_at = new Date(form.date);
     starts_at.setHours(form.time.getHours(), form.time.getMinutes(), 0, 0);
 
@@ -38,10 +68,15 @@ export default function EventForm({ event }: { event?: Event }) {
       title: form.title,
       description: form.description,
       location: form.location,
-      starts_at,
+      starts_at: starts_at.toISOString(),
     };
 
-    console.log(payload);
+    const data = await submit(payload);
+
+    if (data) {
+      setErrors({ title: "" });
+      router.replace("/(drawer)/calendar");
+    }
   };
 
   return (
@@ -66,6 +101,18 @@ export default function EventForm({ event }: { event?: Event }) {
             style={styles.inputfield}
             placeholderTextColor={theme.mutedText}
           />
+          {errors.title && (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: fonts.regular,
+                fontSize: 13,
+                marginTop: 4,
+              }}
+            >
+              {errors.title}
+            </Text>
+          )}
 
           <Text style={styles.label}>Description</Text>
           <TextInput
@@ -93,23 +140,36 @@ export default function EventForm({ event }: { event?: Event }) {
           <TextInput
             value={form.location}
             onChangeText={(value) => updateField("location", value)}
-            placeholder="Edge of the universe..."
+            placeholder="Location (optional)"
             style={styles.inputfield}
             placeholderTextColor={theme.mutedText}
           />
         </View>
 
-        <Pressable onPress={handleSubmit} style={styles.submitBtn}>
-          <Text
-            style={{
-              color: theme.onAccent,
-              fontFamily: fonts.semibold,
-              fontSize: 18,
-            }}
-          >
-            Create
-          </Text>
-        </Pressable>
+        <View>
+          {error && (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: fonts.regular,
+                marginBottom: 8,
+              }}
+            >
+              {error}
+            </Text>
+          )}
+          <Pressable onPress={handleSubmit} style={styles.submitBtn}>
+            <Text
+              style={{
+                color: theme.onAccent,
+                fontFamily: fonts.semibold,
+                fontSize: 18,
+              }}
+            >
+              {loading ? "Creating..." : "Create"}
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -9,8 +9,8 @@ export default function ArcCalendar() {
   const { theme } = useTheme();
 
   const today = new Date();
-  const [viewDate, setViewDate] = useState(new Date()); // controls which month is shown
-  const [selectedDate, setSelectedDate] = useState(new Date()); // controls EventsDisplay
+  const [viewDate, setViewDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const monthName = viewDate.toLocaleString("en-US", {
     month: "long",

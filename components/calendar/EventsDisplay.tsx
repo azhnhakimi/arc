@@ -1,13 +1,12 @@
 import { fonts } from "@/constants/fonts";
 import { useTheme } from "@/theme/useTheme";
-import { extractTimeInfo } from "@/utils/event";
+import { extractTimeInfo } from "@/utils/helpers";
 import Entypo from "@expo/vector-icons/Entypo";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
+import { useEvents } from "@/hooks/useEvents";
 import NewEventCta from "./NewEventCta";
 import NoEventsDisplay from "./NoEventsDisplay";
-
-import { mockEvents } from "@/utils/event";
 
 type EventsDisplayProps = {
   selectedDate: Date;
@@ -22,6 +21,7 @@ type Event = {
 
 export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
   const { theme } = useTheme();
+  const { events, loading, error } = useEvents(selectedDate);
 
   const EventCard = ({ event }: { event: Event }) => {
     const { time, period } = extractTimeInfo(event.starts_at);
@@ -138,13 +138,21 @@ export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
       <View
         style={{
           gap: 12,
-          marginVertical: 24,
+          marginVertical: 32,
         }}
       >
-        {mockEvents.map((calendarEvent, index) => (
-          <EventCard key={index} event={calendarEvent} />
-        ))}
-        <NoEventsDisplay />
+        {loading ? (
+          <View>
+            <ActivityIndicator size="large" color={theme.accent} />
+          </View>
+        ) : events.length > 0 ? (
+          events.map((calendarEvent, index) => (
+            <EventCard key={index} event={calendarEvent} />
+          ))
+        ) : (
+          <NoEventsDisplay />
+        )}
+
         <NewEventCta />
       </View>
     </View>
