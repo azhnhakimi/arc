@@ -22,6 +22,12 @@ const DRAWER_ITEMS: DrawerItem[] = [
     icon: "calendar-outline",
     iconActive: "calendar",
   },
+  {
+    url: "prayers/index",
+    label: "Prayers",
+    icon: "moon-outline",
+    iconActive: "moon",
+  },
 ];
 
 const CONTROL_DRAWER_ITEMS: DrawerItem[] = [
