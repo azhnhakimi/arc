@@ -68,3 +68,23 @@ export async function upsertPrayerLog(
 
   return data;
 }
+
+export async function fetchMonthlyPrayerLogs(year: number, month: number) {
+  const start = new Date(Date.UTC(year, month - 1, 1));
+
+  const today = new Date();
+
+  const monthEnd = new Date(Date.UTC(year, month, 0, 23, 59, 59));
+
+  const end = monthEnd > today ? today : monthEnd;
+
+  const { data, error } = await supabase
+    .from("prayer_logs")
+    .select("*")
+    .gte("date", start.toISOString().split("T")[0])
+    .lte("date", end.toISOString().split("T")[0]);
+
+  if (error) throw error;
+
+  return data;
+}

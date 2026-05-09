@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import {
-  fetchPrayerLogs,
   fetchPrayerTimesForDay,
   fetchZones,
   upsertPrayerLog,
@@ -25,11 +24,13 @@ const PrayerCard = ({
   time,
   todayISO,
   isCompleted = false,
+  refreshLogs,
 }: {
   name: string;
   time: string;
   todayISO: string;
   isCompleted?: boolean;
+  refreshLogs: () => void;
 }) => {
   const styles = useStyles();
   const { theme } = useTheme();
@@ -47,6 +48,7 @@ const PrayerCard = ({
       setIsChecked(newValue);
 
       await upsertPrayerLog(todayISO, name.toLowerCase(), newValue);
+      refreshLogs();
     } catch (error) {
       console.error(error);
     }
@@ -77,7 +79,15 @@ const PrayerCard = ({
   );
 };
 
-export default function PrayerChecklist() {
+type PrayerChecklistProps = {
+  logs: PrayerLog[];
+  refreshLogs: () => void;
+};
+
+export default function PrayerChecklist({
+  logs,
+  refreshLogs,
+}: PrayerChecklistProps) {
   const styles = useStyles();
 
   const today = useMemo(() => new Date(), []);
@@ -95,8 +105,6 @@ export default function PrayerChecklist() {
   const [jakimCode, setJakimCode] = useState<string | null>(null);
 
   const [prayerTimes, setPrayerTimes] = useState<SinglePrayerTime[]>([]);
-
-  const [logs, setLogs] = useState<PrayerLog[]>([]);
 
   const negeriOptions = getNegeriOptions(zones);
 
@@ -138,19 +146,6 @@ export default function PrayerChecklist() {
 
     initialize();
   }, []);
-
-  useEffect(() => {
-    async function loadPrayerLogs() {
-      try {
-        const data = await fetchPrayerLogs(todayISO);
-        setLogs(data ?? []);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    loadPrayerLogs();
-  }, [todayISO]);
 
   useEffect(() => {
     if (savedDaerah && daerahOptions.includes(savedDaerah)) {
@@ -248,7 +243,12 @@ export default function PrayerChecklist() {
 
       <View style={styles.prayerItemsOuterContainer}>
         {mergedPrayerTimes.map((prayer) => (
-          <PrayerCard key={prayer.name} {...prayer} todayISO={todayISO} />
+          <PrayerCard
+            key={prayer.name}
+            {...prayer}
+            todayISO={todayISO}
+            refreshLogs={refreshLogs}
+          />
         ))}
       </View>
     </View>

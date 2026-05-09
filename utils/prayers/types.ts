@@ -37,3 +37,8 @@ export type PrayerLog = {
   prayer_name: string;
   completed: boolean;
 };
+
+export type DailyCounts = {
+  date: string;
+  count: number;
+};

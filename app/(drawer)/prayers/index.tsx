@@ -1,20 +1,15 @@
 import PrayerChecklist from "@/components/prayers/PrayerChecklist";
 import PrayerStats from "@/components/prayers/PrayerStats";
 import { useTheme } from "@/theme/useTheme";
-import { useState } from "react";
+import { fetchMonthlyPrayerLogs } from "@/utils/prayers/api";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   NavigationState,
-  SceneMap,
   SceneRendererProps,
   TabBar,
   TabView,
 } from "react-native-tab-view";
-
-const renderScene = SceneMap({
-  Checklist: PrayerChecklist,
-  Statistics: PrayerStats,
-});
 
 const routes = [
   { key: "Checklist", title: "Checklist" },
@@ -45,6 +40,35 @@ export default function PrayerIndex() {
   const { theme } = useTheme();
 
   const [index, setIndex] = useState(0);
+  const [logs, setLogs] = useState<any[]>([]);
+
+  async function refreshLogs() {
+    const today = new Date();
+
+    const data = await fetchMonthlyPrayerLogs(
+      today.getFullYear(),
+      today.getMonth() + 1,
+    );
+
+    setLogs(data);
+  }
+
+  useEffect(() => {
+    refreshLogs();
+  }, []);
+
+  const renderScene = ({ route }: { route: { key: string } }) => {
+    switch (route.key) {
+      case "Checklist":
+        return <PrayerChecklist logs={logs} refreshLogs={refreshLogs} />;
+
+      case "Statistics":
+        return <PrayerStats logs={logs} />;
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
