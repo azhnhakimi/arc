@@ -98,12 +98,13 @@ export default function CalendarDetails() {
 
       <View style={{ gap: 12 }}>
         <EditScreenBtn
-          onPress={() =>
+          onPress={() => {
+            if (!event?.id) return;
             router.push({
               pathname: "/calendar/edit/[id]",
-              params: { id: event?.id },
-            })
-          }
+              params: { id: event.id },
+            });
+          }}
         />
         <DeleteEventBtn onPress={() => handleDelete(event)} />
       </View>
