@@ -97,7 +97,12 @@ export default function CalendarDisplay({
           alignItems: "flex-end",
         }}
       >
-        <View style={{ flexDirection: "column" }}>
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 1,
+          }}
+        >
           <Text
             style={{
               color: theme.mutedText,
@@ -111,7 +116,7 @@ export default function CalendarDisplay({
             style={{
               color: theme.primaryText,
               fontFamily: fonts.bold,
-              fontSize: 32,
+              fontSize: 24,
             }}
           >
             {monthName}
@@ -121,17 +126,27 @@ export default function CalendarDisplay({
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            gap: 8,
+            gap: 6,
           }}
         >
           <Pressable
             onPress={goToToday}
             style={[
               styles.todayBtn,
-              { backgroundColor: theme.surface, borderColor: theme.accent },
+              {
+                backgroundColor: theme.surface,
+                borderColor: theme.accent,
+                paddingHorizontal: 18,
+              },
             ]}
           >
-            <Text style={{ color: theme.accent, fontFamily: fonts.bold }}>
+            <Text
+              style={{
+                color: theme.accent,
+                fontFamily: fonts.bold,
+                fontSize: 12,
+              }}
+            >
               Today
             </Text>
           </Pressable>
@@ -208,8 +223,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   todayBtn: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
