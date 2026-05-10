@@ -5,9 +5,14 @@ import { themes } from "./theme";
 
 const STORAGE_KEY = "APP_THEME";
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+export const ThemeProvider = ({
+  children,
+  onLoaded,
+}: {
+  children: ReactNode;
+  onLoaded?: () => void;
+}) => {
   const [themeName, setThemeName] = useState<ThemeName>("light");
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -20,7 +25,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       } catch (e) {
         console.log("Failed to load theme", e);
       } finally {
-        setIsLoaded(true);
+        onLoaded?.();
       }
     };
 
@@ -37,8 +42,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const theme = themes[themeName];
-
-  if (!isLoaded) return null;
 
   return (
     <ThemeContext.Provider value={{ theme, themeName, setTheme }}>
