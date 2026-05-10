@@ -142,7 +142,7 @@ export default function CalendarDisplay({
           >
             <Text
               style={{
-                color: theme.accent,
+                color: theme.onAccent,
                 fontFamily: fonts.bold,
                 fontSize: 12,
               }}
