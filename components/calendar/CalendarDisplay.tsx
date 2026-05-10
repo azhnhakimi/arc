@@ -142,9 +142,12 @@ export default function CalendarDisplay({
             <Text
               style={{
                 color: theme.onAccent,
-                fontFamily: fonts.bold,
-                fontSize: 12,
+                // fontFamily: fonts.semibold,
+                fontSize: 16,
+                alignSelf: "stretch",
+                textAlign: "center",
               }}
+              textBreakStrategy="simple"
               numberOfLines={2}
             >
               Today

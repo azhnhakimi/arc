@@ -23,7 +23,10 @@ export default function NoEventsDisplay() {
           fontFamily: fonts.light,
           color: theme.mutedText,
           fontSize: 16,
+          alignSelf: "stretch",
+          textAlign: "center",
         }}
+        textBreakStrategy="simple"
         numberOfLines={2}
       >
         No events for this day.

@@ -121,9 +121,12 @@ export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
         <Text
           style={{
             color: theme.mutedText,
-            fontFamily: fonts.light,
+            // fontFamily: fonts.light,
             fontSize: 16,
+            textAlign: "center",
+            paddingRight: 8,
           }}
+          textBreakStrategy="simple"
           numberOfLines={2}
         >
           {selectedDate.toLocaleDateString("en-US", {

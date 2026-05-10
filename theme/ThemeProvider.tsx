@@ -1,25 +1,40 @@
-// ThemeProvider.tsx
-import { ReactNode, useState } from "react";
-import { createMMKV } from "react-native-mmkv";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ReactNode, useEffect, useState } from "react";
 import { ThemeContext, ThemeName } from "./ThemeContext";
 import { themes } from "./theme";
 
-let storage: ReturnType<typeof createMMKV> | null = null;
-try {
-  storage = createMMKV();
-} catch (e) {
-  console.log("MMKV init failed", e);
-}
-
 const STORAGE_KEY = "APP_THEME";
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const saved = storage?.getString(STORAGE_KEY) as ThemeName | undefined;
-  const [themeName, setThemeName] = useState<ThemeName>(saved ?? "light");
+export const ThemeProvider = ({
+  children,
+  onLoaded,
+}: {
+  children: ReactNode;
+  onLoaded?: () => void;
+}) => {
+  const [themeName, setThemeName] = useState<ThemeName>("light");
 
-  const setTheme = (name: ThemeName) => {
-    storage?.set(STORAGE_KEY, name);
-    setThemeName(name);
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem(STORAGE_KEY);
+        if (savedTheme) setThemeName(savedTheme as ThemeName);
+      } catch (e) {
+        console.log("Failed to load theme", e);
+      } finally {
+        onLoaded?.();
+      }
+    };
+    loadTheme();
+  }, []);
+
+  const setTheme = async (name: ThemeName) => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, name);
+      setThemeName(name);
+    } catch (e) {
+      console.log("Failed to save theme", e);
+    }
   };
 
   return (

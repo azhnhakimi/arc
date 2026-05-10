@@ -1,7 +1,7 @@
 export const fonts = {
-  light: "SpaceGrotesk_300Light",
-  regular: "SpaceGrotesk_400Regular",
-  medium: "SpaceGrotesk_500Medium",
-  semibold: "SpaceGrotesk_600SemiBold",
-  bold: "SpaceGrotesk_700Bold",
+  light: "Inter_300Light",
+  regular: "Inter_400Regular",
+  medium: "Inter_500Medium",
+  semibold: "Inter_600SemiBold",
+  bold: "Inter_700Bold",
 };
