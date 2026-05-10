@@ -7,16 +7,16 @@
     "icon": "./assets/images/icon.png",
     "scheme": "arc",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#121212",
+        "backgroundColor": "#000000",
         "foregroundImage": "./assets/icon/adaptive-icon.png",
         "monochromeImage": "./assets/icon/adaptive-icon.png"
       },
+      "backgroundColor": "#000000",
       "predictiveBackGestureEnabled": false,
       "package": "com.azhnhakimi.arc"
     },
@@ -32,7 +32,7 @@
           "image": "./assets/icon/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#121212"
+          "backgroundColor": "#000000"
         }
       ],
       "@react-native-community/datetimepicker"
