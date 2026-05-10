@@ -1,50 +1,24 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
+import { createMMKV } from "react-native-mmkv";
 import { ThemeContext, ThemeName } from "./ThemeContext";
 import { themes } from "./theme";
 
+const storage = createMMKV();
 const STORAGE_KEY = "APP_THEME";
 
-export const ThemeProvider = ({
-  children,
-  onLoaded,
-}: {
-  children: ReactNode;
-  onLoaded?: () => void;
-}) => {
-  const [themeName, setThemeName] = useState<ThemeName>("light");
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const saved = storage.getString(STORAGE_KEY) as ThemeName | undefined;
+  const [themeName, setThemeName] = useState<ThemeName>(saved ?? "light");
 
-  useEffect(() => {
-    const loadTheme = async () => {
-      try {
-        const savedTheme = await AsyncStorage.getItem(STORAGE_KEY);
-
-        if (savedTheme) {
-          setThemeName(savedTheme as ThemeName);
-        }
-      } catch (e) {
-        console.log("Failed to load theme", e);
-      } finally {
-        onLoaded?.();
-      }
-    };
-
-    loadTheme();
-  }, []);
-
-  const setTheme = async (name: ThemeName) => {
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, name);
-      setThemeName(name);
-    } catch (e) {
-      console.log("Failed to save theme", e);
-    }
+  const setTheme = (name: ThemeName) => {
+    storage.set(STORAGE_KEY, name);
+    setThemeName(name);
   };
 
-  const theme = themes[themeName];
-
   return (
-    <ThemeContext.Provider value={{ theme, themeName, setTheme }}>
+    <ThemeContext.Provider
+      value={{ theme: themes[themeName], themeName, setTheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );

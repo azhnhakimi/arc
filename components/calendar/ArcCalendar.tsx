@@ -1,6 +1,6 @@
 import { useTheme } from "@/theme/useTheme";
 import { useState } from "react";
-import { FlatList } from "react-native";
+import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CalendarDisplay from "./CalendarDisplay";
 import EventsDisplay from "./EventsDisplay";
@@ -63,34 +63,28 @@ export default function ArcCalendar() {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: theme.background, padding: 16 }}
-    >
-      <FlatList
-        data={[]}
-        renderItem={null}
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <ScrollView
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() => (
-          <CalendarDisplay
-            today={today}
-            monthName={monthName}
-            monthIndex={monthIndex}
-            year={year}
-            goToToday={goToToday}
-            goToPrevMonth={goToPrevMonth}
-            goToNextMonth={goToNextMonth}
-            monthArray={monthArray}
-            selectedDate={selectedDate}
-            onDatePressed={setSelectedDate}
-          />
-        )}
-        ListFooterComponent={() => (
-          <EventsDisplay selectedDate={selectedDate} />
-        )}
         contentContainerStyle={{
           gap: 18,
+          padding: 16,
         }}
-      />
+      >
+        <CalendarDisplay
+          today={today}
+          monthName={monthName}
+          monthIndex={monthIndex}
+          year={year}
+          goToToday={goToToday}
+          goToPrevMonth={goToPrevMonth}
+          goToNextMonth={goToNextMonth}
+          monthArray={monthArray}
+          selectedDate={selectedDate}
+          onDatePressed={setSelectedDate}
+        />
+        <EventsDisplay selectedDate={selectedDate} />
+      </ScrollView>
     </SafeAreaView>
   );
 }

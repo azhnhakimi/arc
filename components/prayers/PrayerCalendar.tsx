@@ -101,7 +101,7 @@ export default function PrayerCalendar({
             style={{
               color: theme.primaryText,
               fontFamily: fonts.bold,
-              fontSize: 32,
+              fontSize: 24,
             }}
           >
             {monthName}
@@ -118,10 +118,16 @@ export default function PrayerCalendar({
             onPress={goToToday}
             style={[
               styles.todayBtn,
-              { backgroundColor: theme.surface, borderColor: theme.accent },
+              { backgroundColor: theme.accent, borderColor: theme.accent },
             ]}
           >
-            <Text style={{ color: theme.accent, fontFamily: fonts.bold }}>
+            <Text
+              style={{
+                color: theme.onAccent,
+                fontFamily: fonts.bold,
+                fontSize: 12,
+              }}
+            >
               Today
             </Text>
           </Pressable>

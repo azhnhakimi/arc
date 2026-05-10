@@ -136,7 +136,6 @@ export default function CalendarDisplay({
               {
                 backgroundColor: theme.accent,
                 borderColor: theme.accent,
-                paddingHorizontal: 18,
               },
             ]}
           >
@@ -223,6 +222,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   todayBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
