@@ -124,6 +124,7 @@ export default function EventsDisplay({ selectedDate }: EventsDisplayProps) {
             fontFamily: fonts.light,
             fontSize: 16,
           }}
+          numberOfLines={2}
         >
           {selectedDate.toLocaleDateString("en-US", {
             weekday: "long",

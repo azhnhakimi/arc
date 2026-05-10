@@ -145,6 +145,7 @@ export default function CalendarDisplay({
                 fontFamily: fonts.bold,
                 fontSize: 12,
               }}
+              numberOfLines={2}
             >
               Today
             </Text>

@@ -24,6 +24,7 @@ export default function NoEventsDisplay() {
           color: theme.mutedText,
           fontSize: 16,
         }}
+        numberOfLines={2}
       >
         No events for this day.
       </Text>
