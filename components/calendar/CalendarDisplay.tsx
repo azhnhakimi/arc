@@ -134,7 +134,7 @@ export default function CalendarDisplay({
             style={[
               styles.todayBtn,
               {
-                backgroundColor: theme.surface,
+                backgroundColor: theme.accent,
                 borderColor: theme.accent,
                 paddingHorizontal: 18,
               },
