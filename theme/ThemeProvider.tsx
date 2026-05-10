@@ -1,17 +1,24 @@
+// ThemeProvider.tsx
 import { ReactNode, useState } from "react";
 import { createMMKV } from "react-native-mmkv";
 import { ThemeContext, ThemeName } from "./ThemeContext";
 import { themes } from "./theme";
 
-const storage = createMMKV();
+let storage: ReturnType<typeof createMMKV> | null = null;
+try {
+  storage = createMMKV();
+} catch (e) {
+  console.log("MMKV init failed", e);
+}
+
 const STORAGE_KEY = "APP_THEME";
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const saved = storage.getString(STORAGE_KEY) as ThemeName | undefined;
+  const saved = storage?.getString(STORAGE_KEY) as ThemeName | undefined;
   const [themeName, setThemeName] = useState<ThemeName>(saved ?? "light");
 
   const setTheme = (name: ThemeName) => {
-    storage.set(STORAGE_KEY, name);
+    storage?.set(STORAGE_KEY, name);
     setThemeName(name);
   };
 

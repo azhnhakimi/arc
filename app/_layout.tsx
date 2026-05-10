@@ -11,7 +11,7 @@ import {
 } from "@expo-google-fonts/space-grotesk";
 import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
@@ -24,14 +24,20 @@ export default function RootLayout() {
     SpaceGrotesk_600SemiBold,
     SpaceGrotesk_700Bold,
   });
-  const [themeLoaded, setThemeLoaded] = useState(false);
 
   useEffect(() => {
-    if (fontsLoaded && themeLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded, themeLoaded]);
+    if (fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      SplashScreen.hideAsync();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <ThemeProvider onLoaded={() => setThemeLoaded(true)}>
+    <ThemeProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <AppContent />
       </GestureHandlerRootView>
